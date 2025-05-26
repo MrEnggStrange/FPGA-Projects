@@ -1,43 +1,78 @@
-# FPGA-Projects
-These are some of my FPGA Projects  done with target board ZYNQ 7000 SoC
+# 🚀 FPGA Projects – Zynq-7000 SoC
 
-Project 1- SPI Project in FPGA- Ambient Light Sensor
+Welcome to my collection of FPGA-based projects implemented on the **ZYNQ-7000 SoC**. These projects highlight my experience with interfacing peripherals, working with digital communication protocols, and developing real-time embedded logic.
 
-A demonstration of SPI Master inside FPGA talking to ADC which is an external peripheral.
+---
 
-SPI- Serial Peripheral Interface
+## 🔧 Project 1 – SPI Master Interface: Ambient Light Sensor 🌟
 
--> Used by lot a devices like Memory, Microcontrollers, I/O Devices, LCDs, Converters, ADCs, UARTs ( common for ICs)
+A practical implementation of an **SPI Master** inside the FPGA (PL side) communicating with an external **Ambient Light Sensor** (ADC).  
+This project demonstrates hands-on digital interface control via **Serial Peripheral Interface (SPI)** protocol.
 
-![Screenshot 2025-05-25 154010](https://github.com/user-attachments/assets/48bb4e5b-787e-4ca7-bfe3-35e23e5639f2)
+### 📷 Demo Snapshot
 
-->The SPI Slave is an IC, and The SPI Master is usually a microcontroller or an FPGA (this case).
--> SPI master initiates the data transfer.
--> SCLK - Serial clock ( synchronous communication , ie faster like 16Mb/s, 32 Mb/s....) ,unlike UART (Asynchronous, slower that SPI 1Mb/s).
--> MOSI - Master Out Slave In (DATA LINE). (Write)
--> MISO - Master In Slave Out (DATA LINE). (Read)
--> SS' - Chip Select (bar/compliment indicates active low) ( data transfer happens).(I2C doesnot have this , it uses address).
+![Screenshot](https://github.com/user-attachments/assets/48bb4e5b-787e-4ca7-bfe3-35e23e5639f2)
 
-Advantages
+---
 
--> Multiple slaves possible.
--> FUll Duplex.
--> Higher speed than UART + I2C.
--> Ubiquitous (everywhere)
+## 🔌 About SPI (Serial Peripheral Interface)
 
-Disadvantages
+> SPI is a synchronous, full-duplex communication protocol widely used in embedded systems for interfacing peripherals like sensors, ADCs, memory, and display controllers.
 
--> More Pins than UART + I2C
--> Short distance is good , not for long distances (RS-485/ RS-232).
--> Lot of variants.
+### 📚 Key SPI Concepts:
 
-Modes of SPI
+| Signal | Direction | Description                              |
+|--------|-----------|------------------------------------------|
+| **SCLK** | Output    | Serial Clock – Drives timing (synchronous) |
+| **MOSI** | Output    | Master Out Slave In – Data from Master   |
+| **MISO** | Input     | Master In Slave Out – Data from Slave    |
+| **SS̅ (CS)** | Output    | Slave Select – Activates the slave device |
 
--> Four Modes at High Level ( 0,1,2,3).
--> each mode has a CPOL, CPHA.
--> CPOL - clock polarity
--> CPHA - clock phase
--> There are two CPOL and CPHA states 0 , 1.
--> Data smapling should be done by the receiver not at the beginning or the end of data exchange as it may result in 0 or 1. sampling should be done in the middle.
+---
 
-Demonstration ( without chipselect) 
+### 🧠 Why Use SPI?
+
+✅ **Full Duplex Communication**  
+✅ **Faster than UART & I2C** (16–32 Mbps typical)  
+✅ **Supports Multiple Slaves**  
+✅ **Widely Supported in ICs**  
+
+⚠️ **More Pin Usage**  
+⚠️ **Not Ideal for Long Distances**  
+⚠️ **Many Variants and Modes**  
+
+---
+
+## 📈 SPI Modes: CPOL & CPHA
+
+SPI operates in **4 modes** defined by **Clock Polarity (CPOL)** and **Clock Phase (CPHA)**:
+
+| Mode | CPOL | CPHA | Description                     |
+|------|------|------|---------------------------------|
+| 0    | 0    | 0    | Idle Low, Sample on Rising Edge |
+| 1    | 0    | 1    | Idle Low, Sample on Falling Edge|
+| 2    | 1    | 0    | Idle High, Sample on Falling Edge|
+| 3    | 1    | 1    | Idle High, Sample on Rising Edge|
+
+📝 **Best Practice:** Always sample data **in the middle of the data bit period**, not at the edges, to avoid metastability.
+
+---
+
+## 🛠️ What This Project Demonstrates
+
+- ✅ FPGA as **SPI Master**
+- ✅ External ADC acting as **SPI Slave**
+- ✅ Real-time signal interaction (MOSI, MISO, SCLK)
+- ✅ SPI logic implemented without `chip select` for simplicity
+- ✅ Clean timing and signal integrity at high speeds
+
+---
+
+## 🧰 Tools & Technologies
+
+- 🧠 **FPGA SoC:** ZYNQ-7000 (Xilinx)
+- 📦 **HDL: **VHDL
+- 🧪 **Debugging Tools:** Logic Analyzer, ILA (Integrated Logic Analyzer)
+- 📊 **Visualization:** Vivado Waveform Viewer
+
+---
