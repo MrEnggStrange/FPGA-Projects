@@ -1,13 +1,11 @@
-# 🚀 FPGA Projects – Zynq-7000 SoC
 
-Welcome to my collection of FPGA-based projects implemented on the **ZYNQ-7000 SoC**. These projects highlight my experience with interfacing peripherals, working with digital communication protocols, and developing real-time embedded logic.
+
+# 🔧 SPI Master Interface – VHDL Design & Simulation 🌟
+
+A complete **VHDL implementation and simulation** of a **Serial Peripheral Interface (SPI) Master**. This project demonstrates digital communication protocol design using a **Finite State Machine (FSM)** model in VHDL with **CPOL = 0** and **CPHA = 1**.
 
 ---
 
-## 🔧 Project 1 – SPI Master Interface: Ambient Light Sensor 🌟
-
-A practical implementation of an **SPI Master** inside the FPGA (PL side) communicating with an external **Ambient Light Sensor** (ADC).  
-This project demonstrates hands-on digital interface control via **Serial Peripheral Interface (SPI)** protocol.
 
 ### 📷 Demo Snapshot
 
@@ -43,36 +41,74 @@ This project demonstrates hands-on digital interface control via **Serial Periph
 
 ---
 
-## 📈 SPI Modes: CPOL & CPHA
+## ⚙️ SPI Modes (CPOL / CPHA)
 
-SPI operates in **4 modes** defined by **Clock Polarity (CPOL)** and **Clock Phase (CPHA)**:
+| **Mode** | **CPOL** | **CPHA** | **Clock Idle** | **Sampling Edge**        |
+|----------|----------|----------|----------------|---------------------------|
+| 0        | 0        | 0        | LOW            | Rising Edge               |
+| 1 ✅     | 0        | 1        | LOW            | Falling Edge *(Used)*     |
+| 2        | 1        | 0        | HIGH           | Falling Edge              |
+| 3        | 1        | 1        | HIGH           | Rising Edge               |
 
-| Mode | CPOL | CPHA | Description                     |
-|------|------|------|---------------------------------|
-| 0    | 0    | 0    | Idle Low, Sample on Rising Edge |
-| 1    | 0    | 1    | Idle Low, Sample on Falling Edge|
-| 2    | 1    | 0    | Idle High, Sample on Falling Edge|
-| 3    | 1    | 1    | Idle High, Sample on Rising Edge|
-
-📝 **Best Practice:** Always sample data **in the middle of the data bit period**, not at the edges, to avoid metastability.
+> 📝 *This project uses SPI Mode 1: CPOL = 0, CPHA = 1.*
 
 ---
 
-## 🛠️ What This Project Demonstrates
+## 🛠️ Project Features
 
-- ✅ FPGA as **SPI Master**
-- ✅ External ADC acting as **SPI Slave**
-- ✅ Real-time signal interaction (MOSI, MISO, SCLK)
-- ✅ SPI logic implemented without `chip select` for simplicity
-- ✅ Clean timing and signal integrity at high speeds
+- ✅ SPI Master designed as a **finite state machine (FSM)** in VHDL  
+- ✅ Fully simulated using **Vivado testbench**  
+- ✅ Data transmitted and received using `sndData` and `rcvData` signals  
+- ✅ Simulated 8-bit transfer (configurable via `USPI_SIZE` generic)  
+- ✅ Clean timing and signal transitions observed in waveform
 
 ---
 
-## 🧰 Tools & Technologies
+## 🧱 FSM State Overview
 
-- 🧠 **FPGA SoC:** ZYNQ-7000 (Xilinx)
-- 📦 **HDL: **VHDL
+| **State**      | **Description**                                 |
+|----------------|-------------------------------------------------|
+| `sidle`        | Idle, waits for `start = 1`                     |
+| `sstartx`      | Initializes write buffer                        |
+| `sstart_lo`    | Drives first bit of data and sets clock high    |
+| `sclk_hi`      | Transfers MSB, shifts output                    |
+| `sclk_lo`      | Receives data on falling edge                  |
+| `sstop_hi`     | Sends final bit                                 |
+| `sstop_lo`     | Deselects slave, returns to idle                |
+
+---
+
+## 🧪 Simulation Setup
+
+### ✅ Testbench Highlights
+
+- Simulates clock (`bclk`), reset (`resetn`), start control, and `sdi/sdo` logic  
+- Uses a **clock divider** to make SPI clock observable in simulation  
+- Implements data loopback (e.g., `sdi <= NOT sdo`)  
+- Tests transmission of `x"5A"` from master to (simulated) slave
+
+```vhdl
+signal sndData : std_logic_vector(7 downto 0) := x"5A";
+signal rcvData : std_logic_vector(7 downto 0);
 - 🧪 **Debugging Tools:** Logic Analyzer, ILA (Integrated Logic Analyzer)
 - 📊 **Visualization:** Vivado Waveform Viewer
 
 ---
+
+✅ Transmission complete when done = '1'
+
+| **Tool**        | **Description**                             |
+| --------------- | ------------------------------------------- |
+| 🧠 FPGA Target  | ZYNQ-7000 SoC (Xilinx) *(for hardware use)* |
+| 💾 HDL Language | VHDL                                        |
+| 🧪 Testbench    | Written in VHDL                             |
+| 🛠️ Simulator   | Vivado Simulation & Waveform Viewer         |
+| 📐 FSM Tool     | FiZZiM *(for FSM design & visualization)*   |
+
+📌 Result & Conclusion
+✅ Successfully simulated an SPI Master in VHDL using a structured FSM
+✅ Verified 8-bit SPI Mode 1 (CPOL=0, CPHA=1) communication
+✅ Demonstrated timing accuracy and FSM transitions
+✅ Ready for integration with real hardware or IP cores
+
+
